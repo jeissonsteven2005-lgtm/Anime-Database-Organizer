@@ -1,0 +1,15 @@
+Terms & Conditions for Anime Database Organizer
+
+1. License: Personal use only, non-commercial.
+
+2. No Warranty: App as-is, no liability.
+
+3. User Data: User responsible for Excel data.
+
+4. API Use: Complies with MAL terms.
+
+5. Changes: May update.
+
+Acceptance: Use implies agreement.
+Updated: 2024
+

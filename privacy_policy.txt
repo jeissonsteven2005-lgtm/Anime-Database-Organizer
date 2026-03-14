@@ -1,0 +1,13 @@
+Privacy Policy for Anime Database Organizer
+
+1. Data Collection: App collects anime lists from user Excel files and public MAL API data for personal organization.
+
+2. Use: Data used solely for creating local SQLite DB and folders. No sharing.
+
+3. No Tracking: No user tracking, cookies or personal data collected.
+
+4. Security: Local processing only.
+
+Contact: Local app, no contact.
+Updated: 2024
+
