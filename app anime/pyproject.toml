@@ -1,0 +1,21 @@
+[project]
+name = "anime-organizer"
+version = "0.1.0"
+description = "Organiza imágenes de anime a partir de un Excel"
+authors = [
+    { name = "Tú", email = "you@example.com" }
+]
+
+[project.dependencies]
+# restringimos la versión para evitar cambios inesperados en pandas 3/4
+pandas = ">=2.1,<4"
+
+[project.scripts]
+anime-organizer = "anime_organizer:main"
+
+[project.optional-dependencies]
+ocr = ["pillow", "pytesseract", "imagehash"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
