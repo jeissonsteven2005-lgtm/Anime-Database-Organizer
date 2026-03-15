@@ -32,7 +32,7 @@ class App(QMainWindow):
         self.setWindowTitle("Anime AI Organizer - Modo SAFE")
         self.setGeometry(100, 100, 1000, 600)
         self.moved_list = []
-        self.pending_list = []
+        self.pending_data = []
         self.errors = []
         self.current_folder_stats = {}
         self.worker = None
@@ -140,8 +140,9 @@ class App(QMainWindow):
         self.proc_list.clear()
         self.results_text.clear()
         self.pending_list.clear()
+        self.pending_data.clear()
         self.moved_list = []
-        self.pending_list = []
+        self.pending_data = []
 
         self.worker = Worker(excel, images, output, self.ai_first.isChecked())
         self.worker.progress.connect(self.update_progress)
@@ -170,7 +171,7 @@ class App(QMainWindow):
 
     def on_finish(self, moved, pending, errors):
         self.moved_list = moved
-        self.pending_list = pending
+        self.pending_data = pending
         self.errors = errors
         
         # Final stats
@@ -182,14 +183,14 @@ class App(QMainWindow):
         self.btn_run.setEnabled(True)
         self.tabs.setCurrentIndex(2)  # Resultados
         
-        self.pending_list.addItems([f"{p['img']} - {', '.join(p['options'][:3])}" for p in pending])
+        self.pending_list.addItems([f"{p['img']} - {', '.join(p.get('options', [])[:3])}" for p in self.pending_data])
         
         if errors:
             self.proc_list.addItems([f"ERROR: {e}" for e in errors[-10:]])
 
     def show_pending_detail(self, item):
         idx = self.pending_list.row(item)
-        p = self.pending_list[idx] if idx < len(self.pending_list) else {}
+        p = self.pending_data[idx] if idx < len(self.pending_data) else {}
         opts = ', '.join(p.get('options', [])[:5])
         self.pending_detail.setText(f"Archivo: {p.get('img', 'N/A')}\nSugerencias: {opts}")
 
@@ -206,4 +207,3 @@ if __name__ == "__main__":
     win = App()
     win.show()
     sys.exit(app.exec())
-

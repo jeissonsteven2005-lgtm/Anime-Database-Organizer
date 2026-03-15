@@ -18,17 +18,17 @@ except ImportError:
     IMAGE_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif']
 
 def sanitize_name(name: str) -> str:
-    \"\"\"
-    Reemplaza caracteres no validos para carpetas.
-    \"\"\"
+    """
+    Reemplaza caracteres no válidos para carpetas.
+    """
     sanitized = re.sub(r'[\\/:*?"<>|]', "_", name)
     return sanitized[:255]
 
 def match_name_parts_confidence(img_base: str, all_names: set, min_conf=0.8) -> Optional[Tuple[str, float]]:
-    \"\"\"
+    """
     Matching jerárquico con confianza.
     Retorna (folder, confidence) si > min_conf.
-    \"\"\"
+    """
     words = img_base.replace('_', ' ').split()
     candidates = set(all_names)
     
@@ -53,9 +53,9 @@ def match_name_parts_confidence(img_base: str, all_names: set, min_conf=0.8) -> 
     return None
 
 def get_similarity_confidence(embedding_neighbors: list, meta: list) -> Optional[Tuple[str, float]]:
-    \"\"\"
+    """
     Confianza embedding similar.
-    \"\"\"
+    """
     if not embedding_neighbors:
         return None
     
@@ -73,9 +73,9 @@ def get_similarity_confidence(embedding_neighbors: list, meta: list) -> Optional
     return None
 
 def move_image(path: str, output_dir: str, folder: str, img: str, index: ImageIndex, meta: list, progress_hook=None, method: str = 'manual', confidence: float = 1.0) -> Optional[str]:
-    \"\"\"
+    """
     Mueve SOLO si confident. Embedding ANTES move.
-    \"\"\"
+    """
     try:
         vec = get_embedding(path)  # ANTES move!
         safe_folder = sanitize_name(folder)
@@ -91,7 +91,7 @@ def move_image(path: str, output_dir: str, folder: str, img: str, index: ImageIn
         
         shutil.move(path, dest_path)
         
-        # Learning + DB (igual)
+        # Learning + DB
         learning_path = os.path.join(output_dir, "learning.json")
         learning = {}
         if os.path.exists(learning_path):
@@ -116,10 +116,10 @@ def move_image(path: str, output_dir: str, folder: str, img: str, index: ImageIn
         return None
 
 def organize_images(excel, image_dir, output_dir, progress_hook=None, interactive=False, conf_threshold=0.9, ai_first=False) -> Tuple[List[Dict], List[Dict], List[str]]:
-    \"\"\"
+    """
     CONF_THRESHOLD = 0.9 (solo mover confident).
     Pendings NO se mueven.
-    \"\"\"
+    """
     logging.basicConfig(level=logging.INFO)
     
     def model_progress(info):
@@ -256,4 +256,3 @@ def organize_images(excel, image_dir, output_dir, progress_hook=None, interactiv
 
 if __name__ == "__main__":
     print("Core organizer listo - modo safe.")
-

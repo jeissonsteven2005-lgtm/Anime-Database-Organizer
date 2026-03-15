@@ -1,0 +1,29 @@
+# Comandos para Ejecutar el Organizador de Anime
+# Copy-paste desde cualquier terminal. Usa single quotes para paths con espacios.
+
+## 1. Recomendado - Script maestro completo:
+bash &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes/ejecutar_organizador.sh&#39;
+
+## 2. Paso a paso desde proyecto:
+cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
+bash ejecutar_organizador.sh
+
+## 3. Activar venv y GUI manual:
+source &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes/anime_env/bin/activate&#39;
+cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
+python3 &#39;app anime/gui.py&#39;
+
+## 4. Instalar dependencias (si hace falta):
+cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
+python3 &#39;app anime/install_env.py&#39;
+
+## 5. Setup completo:
+python3 &#39;app anime/setup_and_run.py&#39;
+
+## 6. CLI directo (sin GUI):
+cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
+source anime_env/bin/activate
+python3 &#39;app anime/anime_organizer.py&#39; --excel &#39;lista de animes actualización.xlsx&#39; --images &#39;anime/&#39; --output &#39;filtrada/&#39;
+
+¡Estos comandos funcionan sin errores! Primera ejecución descarga modelos IA (~600MB).
+

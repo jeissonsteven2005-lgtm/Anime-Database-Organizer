@@ -6,7 +6,19 @@ import sys
 
 # Ruta del proyecto
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VENV_NAME = os.path.join(PROJECT_PATH, "anime_env")
+DEFAULT_VENV = os.path.join(PROJECT_PATH, ".venv")
+LEGACY_VENV = os.path.join(PROJECT_PATH, "anime_env")
+
+
+def get_venv_path():
+    """Prefer standard .venv; fallback to anime_env for backwards compatibility."""
+    if os.path.isdir(DEFAULT_VENV):
+        return DEFAULT_VENV
+    return LEGACY_VENV
+
+
+# Venv path for this installation / execution
+VENV_NAME = get_venv_path()
 
 DEPENDENCIES = [
     "torch",
@@ -53,10 +65,26 @@ def install_deps():
         run(f'"{pip}" install "{dep}"')
 
 def create_run():
-    """Script run.sh."""
+    """Crea un wrapper run.sh que prepara el venv y ejecuta la GUI."""
     script = f'''#!/bin/bash
-source "{VENV_NAME}/bin/activate"
-cd "{PROJECT_PATH}"
+set -e
+
+ROOT="$(cd "$(dirname "${{BASH_SOURCE[0]}}")" && pwd)"
+cd "$ROOT"
+
+# Si no hay entorno virtual, crear e instalar dependencias
+if [ ! -d "$ROOT/.venv" ]; then
+  echo "Entorno virtual no encontrado (.venv). Instalando dependencias..."
+  python3 "app anime/install_env.py"
+fi
+
+# Asegurarse de que pandas esté disponible (comprobación rápida de dependencias)
+if ! "$ROOT/.venv/bin/python" -c "import pandas" >/dev/null 2>&1; then
+  echo "Instalando dependencias de Python faltantes..."
+  "$ROOT/.venv/bin/pip" install -r "app anime/requirements.txt"
+fi
+
+source "$ROOT/.venv/bin/activate"
 python3 "app anime/gui.py"
 '''
     run_sh = os.path.join(PROJECT_PATH, "run.sh")

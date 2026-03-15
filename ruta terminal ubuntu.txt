@@ -1,3 +1,21 @@
-bash "/home/jecla2517/Escritorio/programacion/ordenar imagenes/ejecutar_organizador.sh"
+RUTAS TERMINAL UBUNTU - Anime Organizer (todas las partes específicas)
 
+=== 1. INSTALACIÓN/CONFIGURACIÓN (primera vez) ===
+cd "/home/jecla2517/Escritorio/programacion/ordenar imagenes" && python3 "app anime/install_env.py"
+(Crea venv anime_env, instala deps como torch/PySide6/faiss, genera run.sh)
 
+=== 2. SOLO PARTE SQL/DB (crear animes.db desde Excel) ===
+cd "/home/jecla2517/Escritorio/programacion/ordenar imagenes" && ./db_create.sh
+(Ejecuta animes_database.py en venv, crea tablas/carpetas animes desde "lista de animes actualización.xlsx")
+
+=== 3. SOLO GUI/INTERFAZ PRINCIPAL ===
+cd "/home/jecla2517/Escritorio/programacion/ordenar imagenes" && ./run.sh
+(O source anime_env/bin/activate && python3 "app anime/gui.py")
+
+=== 4. SETUP COMPLETO + ABRIR GUI ===
+cd "/home/jecla2517/Escritorio/programacion/ordenar imagenes" && python3 "app anime/setup_and_run.py"
+(Crea venv, instala deps, crea shortcut escritorio, abre GUI)
+
+=== 5. EJECUTAR ORGANIZADOR COMPLETO (recomendado) ===
+cd "/home/jecla2517/Escritorio/programacion/ordenar imagenes" && ./ejecutar_organizador.sh
+(Llama start.sh que chequea deps y corre run.sh)
