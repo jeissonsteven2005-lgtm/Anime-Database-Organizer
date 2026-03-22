@@ -18,7 +18,7 @@ def get_mal_info(anime_title: str, client_id: str) -> dict:
     params = {
         "q": anime_title,
         "limit": 1,
-        "fields": "title,mean,num_episodes,start_season,genres"
+        "fields": "title,mean,num_episodes,start_season,genres,synopsis"
     }
     headers = {"X-MAL-CLIENT-ID": client_id}
     try:
@@ -33,7 +33,8 @@ def get_mal_info(anime_title: str, client_id: str) -> dict:
                 "episodes": entry.get("num_episodes"),
                 "season": entry.get("start_season", {}).get("season"),
                 "year": entry.get("start_season", {}).get("year"),
-                "genres": ", ".join([g["name"] for g in entry.get("genres", [])])
+                "genres": ", ".join([g["name"] for g in entry.get("genres", [])]),
+                "synopsis": entry.get("synopsis", "")
             }
         return {}
     except Exception as e:

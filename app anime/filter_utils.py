@@ -5,16 +5,20 @@ from difflib import get_close_matches
 DEFAULT_IGNORE = ["PORTADA", "LATINO", "CASTELLANO", "SUB", "DUB", "OVA", "MOVIE", "EPISODIO", "CAPITULO", "EP", "CAP", "DESU", "TV", "BD"]
 
 def normalise_image_name(name: str, ignore_words: Optional[List[str]] = None) -> str:
-    """Normaliza nombre de imagen para filtrado: reemplaza _ por espacio, ignora palabras, quita números finales, (1), [1], upper, strip."""
+    """Normaliza nombre de imagen para filtrado: reemplaza _ por espacio, ignora algunas palabras, upper, strip.
+    Menos agresiva que antes para preservar más información de matching."""
     if ignore_words is None:
-        ignore_words = DEFAULT_IGNORE
+        # Palabras a ignorar más selectivas - solo las más comunes que no ayudan en matching
+        ignore_words = ["PORTADA", "LATINO", "CASTELLANO", "SUB", "DUB", "OVA", "MOVIE", "EPISODIO", "CAPITULO", "EP", "CAP", "DESU", "TV", "BD"]
+
     s = name.replace("_", " ")
-    s = re.sub(r'\s*\(\d+\)\s*|\[\d+\]\s*|- \d+', "", s)  # remove (1), [1], -1
+    # Solo quitar números al final si son indicadores de secuencia, no parte del título
+    s = re.sub(r'\s*\(\d+\)\s*$|\[\d+\]\s*$', "", s)  # Solo al final
     s = s.upper()
-    # Ignorar palabras (más largas primero)
+    # Ignorar palabras (más largas primero) pero solo si no son parte del título principal
     for w in sorted(ignore_words, key=len, reverse=True):
-        s = s.replace(w.upper(), "")
-    s = re.sub(r"\d+$", "", s)
+        # Solo ignorar si está al final o separado por espacios/puntuación
+        s = re.sub(r'\b' + re.escape(w.upper()) + r'\b', "", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
 

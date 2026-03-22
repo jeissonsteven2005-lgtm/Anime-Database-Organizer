@@ -1,29 +1,131 @@
-# Comandos para Ejecutar el Organizador de Anime
-# Copy-paste desde cualquier terminal. Usa single quotes para paths con espacios.
+═════════════════════════════════════════════════════════
+  COMANDOS PARA EJECUTAR ORGANIZADOR DE ANIME
+═════════════════════════════════════════════════════════
 
-## 1. Recomendado - Script maestro completo:
-bash &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes/ejecutar_organizador.sh&#39;
+OPCIÓN 1: RECOMENDADO - Una línea (copia y pega):
+═════════════════════════════════════════════════════════
 
-## 2. Paso a paso desde proyecto:
-cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
-bash ejecutar_organizador.sh
+bash '/home/jecla2517/Escritorio/programacion/ordenar imagenes/ejecutar_organizador.sh'
 
-## 3. Activar venv y GUI manual:
-source &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes/anime_env/bin/activate&#39;
-cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
-python3 &#39;app anime/gui.py&#39;
 
-## 4. Instalar dependencias (si hace falta):
-cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
-python3 &#39;app anime/install_env.py&#39;
+OPCIÓN 2: Interfaz gráfica moderna (NUEVO DISEÑO):
+═════════════════════════════════════════════════════════
 
-## 5. Setup completo:
-python3 &#39;app anime/setup_and_run.py&#39;
-
-## 6. CLI directo (sin GUI):
-cd &#39;/home/jecla2517/Escritorio/programacion/ordenar imagenes&#39;
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
 source anime_env/bin/activate
-python3 &#39;app anime/anime_organizer.py&#39; --excel &#39;lista de animes actualización.xlsx&#39; --images &#39;anime/&#39; --output &#39;filtrada/&#39;
+python3 'app anime/gui.py'
 
-¡Estos comandos funcionan sin errores! Primera ejecución descarga modelos IA (~600MB).
+
+OPCIÓN 3: Activar entorno e iniciar GUI:
+═════════════════════════════════════════════════════════
+
+source '/home/jecla2517/Escritorio/programacion/ordenar imagenes/anime_env/bin/activate'
+python3 'app anime/gui.py'
+
+
+OPCIÓN 4: Instalar/Reparar dependencias:
+═════════════════════════════════════════════════════════
+
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+python3 'app anime/install_env.py'
+
+
+OPCIÓN 5: Uso CLI (sin GUI) - Procesar imágenes:
+═════════════════════════════════════════════════════════
+
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+source anime_env/bin/activate
+python3 'app anime/anime_organizer.py' --excel 'lista de animes actualización.xlsx' --images 'anime/' --output 'filtrada/'
+
+
+NOTAS IMPORTANTES:
+═════════════════════════════════════════════════════════
+- Primera ejecución descarga modelos IA (~600MB)
+- Todos los comandos funcionan sin errores
+- Usa Opción 1 para la forma más rápida y fácil
+- Opción 2 para disfrutar del nuevo diseño moderno
+
+
+NUEVAS CARACTERÍSTICAS v2.1 - ALGORITMO MEJORADO:
+═════════════════════════════════════════════════════════
+🤖 ALGORITMO DE ASIGNACIÓN MEJORADO:
+   • Matching multi-nivel más preciso y robusto
+   • Normalización inteligente menos agresiva (preserva más información)
+   • IA (CLIP) ahora se ejecuta SIEMPRE como fallback para casos difíciles
+   • Thresholds de confianza optimizados (reducción de falsos negativos)
+   • Mejor detección de coincidencias parciales en nombres
+   • Reducción significativa de errores de asignación
+
+🎯 PRECISIÓN MEJORADA:
+   • LEARNING: Asignaciones manuales aprendidas (100% confianza)
+   • NAME PARTS: Matching por palabras con normalización inteligente (70%+)
+   • EXACT MATCH: Coincidencia exacta después de filtrado (100%)
+   • SIMILARITY: Búsqueda semántica FAISS con más candidatos (75%+)
+   • IA FALLBACK: CLIP como último recurso para casos difíciles (80%+)
+
+🧹 LIMPIEZA AUTOMÁTICA MEJORADA:
+   • Eliminación de carpetas no válidas más eficiente
+   • Devolución de imágenes al directorio original optimizada
+   • Verificación de integridad antes de organizar
+✨ INTERFAZ COMPLETAMENTE RENOVADA
+🎨 Diseño moderno con gradientes y colores vibrantes
+🚀 Mejor experiencia de usuario
+📊 Estadísticas mejoradas con porcentajes
+🔍 Detalles ampliados para archivos pendientes
+📁 PESTAÑA DE RESULTADOS INTERACTIVA:
+   • Lista clickeable de carpetas con conteo de imágenes
+   • Al hacer clic en una carpeta, muestra nombres de imágenes
+   • Navegación intuitiva y visual
+⚡ Indicadores visuales mejorados
+
+🗄️ BASE DE DATOS MEJORADA:
+   • Nombres de tablas y títulos en MAYÚSCULA
+   • Nueva columna SINOPSIS obtenida de MAL API
+   • FILTRADO INTELIGENTE: Solo usa tabla ANIMES_VISTOS para crear carpetas
+   • Todas las tablas incluyen: rating, episodes, season, year, genres, synopsis
+📂 CARPETAS EN MAYÚSCULA:
+   • Todos los nombres de carpetas se crean en mayúscula
+   • Estandarización completa del sistema
+
+🔄 FLUJO DE TRABAJO OPTIMIZADO:
+   1. 📊 Analiza Excel y actualiza Base de Datos
+   2. 🧹 LIMPIEZA AUTOMÁTICA: Elimina carpetas no válidas y devuelve imágenes a 'anime/'
+   3. 🗄️ Lee nombres SOLO desde tabla ANIMES_VISTOS de Base de Datos actualizada
+   4. 📁 Crea carpetas basándose en datos de BD (solo animes vistos)
+   5. 🎯 Organiza imágenes usando IA y matching inteligente
+   6. 🔄 [NUEVO] Renombra carpetas e imágenes según BD (solo animes vistos)
+
+🆕 FUNCIONALIDAD DE RENOMBRADO:
+   • PESTAÑA DEDICADA "🔄 Renombrar" con interfaz especializada
+   • Botón "RENOMBRAR CARPETAS E IMÁGENES" en pestaña dedicada
+   • Información detallada sobre qué hace la función
+   • Barra de progreso específica para el renombrado
+   • Renombra carpetas según nombres de la BD (en mayúscula)
+   • Renombra imágenes como "NOMBRE_CARPETA # 1.jpg", "# 2.jpg", etc.
+   • Mantiene orden alfabético de imágenes
+
+📜 MEJORAS DE INTERFAZ:
+   • SCROLL en todas las pestañas para mejor navegación
+   • Barras de scroll estilizadas con gradientes temáticos
+   • Diseño responsivo que se adapta al contenido
+   • Mejor organización visual de elementos
+
+OPCIÓN 6: Renombrado Independiente (PROCESO APARTE):
+═════════════════════════════════════════════════════════
+
+# Opción A: Script automático (recomendado)
+bash '/home/jecla2517/Escritorio/programacion/ordenar imagenes/rename_anime.sh'
+
+# Opción B: Comando directo
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+source anime_env/bin/activate
+python3 'app anime/rename_tool.py' --output 'filtrar/' --verbose
+
+# Opción C: Con Excel específico
+python3 'app anime/rename_tool.py' --output 'filtrar/' --excel 'lista.xlsx' --verbose
+
+Opciones del renombrado independiente:
+  --output    Carpeta a renombrar (requerido)
+  --excel     Archivo Excel específico (opcional)
+  --verbose   Salida detallada con logs
 

@@ -22,8 +22,9 @@ EXCEL_FILE = 'lista de animes actualización.xlsx'
 DB_FILE = 'animes.db'
 
 def sanitize_name(name: str) -> str:
-    # Space to _, invalid chars _, multiple _ one, trim _
-    sanitized = re.sub(r'[\\/:*?\"<>| ]', '_', name)
+    # Convertir a mayúscula, reemplazar espacios y caracteres inválidos por _, múltiples _ por uno solo, trim _
+    sanitized = str(name).upper()
+    sanitized = re.sub(r'[\\/:*?\"<>| ]', '_', sanitized)
     sanitized = re.sub(r'_+', '_', sanitized)
     sanitized = sanitized.strip('_')
     return sanitized[:255]
@@ -56,7 +57,7 @@ def main():
         tbl = sanitize_name(table_title)
         print(f"Tabla: {tbl} (columna {col_idx})")
         c.execute(f'DROP TABLE IF EXISTS "{tbl}"')
-        c.execute(f'CREATE TABLE "{tbl}" (title TEXT PRIMARY KEY)')
+        c.execute(f'CREATE TABLE "{tbl}" (title TEXT PRIMARY KEY, rating TEXT, episodes TEXT, season TEXT, year TEXT, genres TEXT, synopsis TEXT)')
         
         # Valores desde la segunda fila (índice 1) en adelante, en mayúsculas, únicos
         titles = df.iloc[1:, col_idx].dropna().astype(str).str.strip().str.upper().tolist()
@@ -67,8 +68,9 @@ def main():
                 continue
             all_names.add(title)
             c.execute(f'INSERT OR IGNORE INTO "{tbl}" (title) VALUES (?)', (title,))
-    
-    # === Completar datos con MAL ===
+        
+        conn.commit()
+        print(f"Tabla {tbl} creada con {len(unique_titles)} títulos.")
     if MAL_AVAILABLE:
         client_id = "02f49b142f059c7b7379e07aff06356d"  # Cambia por tu client_id real
         for col_idx in range(df.shape[1]):
@@ -80,19 +82,14 @@ def main():
             # Obtener todos los títulos de la tabla
             c.execute(f'SELECT title FROM "{tbl}"')
             rows = c.fetchall()
-            # Añadir columnas si no existen
-            for col in ["rating", "episodes", "season", "year", "genres"]:
-                try:
-                    c.execute(f'ALTER TABLE "{tbl}" ADD COLUMN {col} TEXT')
-                except sqlite3.OperationalError:
-                    pass  # Ya existe
+            
             for (title,) in rows:
                 info = get_mal_info(title, client_id)
                 if info:
-                    c.execute(f'UPDATE "{tbl}" SET rating=?, episodes=?, season=?, year=?, genres=? WHERE title=?',
-                        (info.get("rating"), info.get("episodes"), info.get("season"), info.get("year"), info.get("genres"), title))
+                    c.execute(f'UPDATE "{tbl}" SET rating=?, episodes=?, season=?, year=?, genres=?, synopsis=? WHERE title=?',
+                        (info.get("rating"), info.get("episodes"), info.get("season"), info.get("year"), info.get("genres"), info.get("synopsis"), title))
             conn.commit()
-        print("Datos de MAL completados en la base de datos.")
+            print(f"Tabla {tbl} completada con datos de MAL.")
     else:
         print("API de MAL no disponible. Solo se crearon los títulos.")
     

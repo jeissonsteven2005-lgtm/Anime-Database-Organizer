@@ -1,203 +1,321 @@
-# Organizador de Anime (Mejorado con IA)
+# 🎌 Anime AI Organizer Pro
 
-Este proyecto es una utilidad avanzada en Python para organizar imágenes de anime usando inteligencia artificial. Ahora incluye:
+**Organizador inteligente de imágenes de anime con IA avanzada y interfaz moderna**
 
-
-1. Lectura de hojas de cálculo (Excel/CSV) con títulos de anime.
-2. Almacenamiento en base de datos SQLite (todas las tablas en mayúsculas y ordenadas alfabéticamente).
-3. Organización automática de imágenes en carpetas por anime usando modelos de IA (CLIP y YOLO).
-4. Detección de personajes en imágenes con umbral de confianza y nombres de clase.
-5. Búsqueda y comparación eficiente de imágenes usando FAISS y embeddings.
-6. Procesamiento batch de imágenes para mayor velocidad.
-7. Manejo robusto de errores y logs para depuración.
-8. Todas las rutas se gestionan desde la raíz del proyecto: `/home/jecla2517/Escritorio/programacion/ordenar imagenes`.
-
-El objetivo principal es facilitar la clasificación de colecciones de fanarts, capturas o carátulas asociadas a series listadas en una hoja de cálculo, con ayuda de modelos de IA para mayor precisión y automatización.
+Este proyecto es una aplicación completa para organizar automáticamente colecciones de imágenes de anime usando modelos de inteligencia artificial de última generación. Combina procesamiento de datos, reconocimiento de imágenes con IA, integración con APIs externas y una interfaz gráfica moderna para una experiencia de usuario excepcional.
 
 ---
 
-## Requisitos
+## ✨ Características Principales
 
-* **Python 3.8+** (probado con 3.12). Se recomienda entorno virtual.
-* **pandas** (>=2.1,<4), **torch**, **open_clip_torch**, **faiss-cpu**, **ultralytics**, **pillow**, **opencv-python**, **pyside6**.
+### 🤖 **Inteligencia Artificial Avanzada**
+- **Modelos CLIP y YOLO** para reconocimiento preciso de anime en imágenes
+- **Detección de personajes** con umbrales de confianza configurables
+- **Embeddings y búsqueda semántica** usando FAISS para matching eficiente
+- **Procesamiento batch** para máxima velocidad y rendimiento
 
-Opcionales para revisión interactiva (OCR/gestos visuales):
-* `Pillow`, `pytesseract`, `imagehash`, `python3-tk` (la GUI usa tkinter).
-  Instálalos con `pip install .[ocr]` o manualmente.
+### 🗄️ **Base de Datos Inteligente**
+- **SQLite con estructura optimizada** - todas las tablas en MAYÚSCULA
+- **Integración con MyAnimeList (MAL) API** - incluye sinopsis, rating, episodios, etc.
+- **Nombres estandarizados** - conversión automática a mayúscula- **Filtrado inteligente** - solo crea carpetas de **ANIMES_VISTOS**- **Columnas enriquecidas**: título, rating, episodios, temporada, año, géneros, sinopsis
 
-> Si prefieres no usar pandas, puedes modificar `read_excel_to_dataframe` para otra librería, pero las demás funciones esperan un **DataFrame** de pandas.
+### 🎨 **Interfaz Gráfica Moderna**
+- **PySide6 (Qt)** - interfaz nativa y profesional
+- **5 pestañas especializadas**:
+  - ⚙️ **Configuración** - rutas, opciones y ejecución principal
+  - 🔄 **Procesando** - progreso en tiempo real del análisis
+  - 📊 **Resultados** - estadísticas interactivas por carpeta
+  - ⏳ **Pendientes** - imágenes sin clasificar
+  - 🔄 **Renombrar** - herramienta dedicada para reorganizar archivos
+- **Scroll en todas las pestañas** para navegación fluida
+- **Diseño con gradientes** y elementos visuales atractivos
+
+### 🔧 **Funcionalidades Avanzadas**
+- **Organización automática** - crea carpetas por anime y mueve imágenes
+- **Renombrado inteligente** - "NOMBRE_ANIME # 1.jpg", "# 2.jpg", etc.
+- **Detección de duplicados** y filtrado inteligente
+- **Modos mover/copiar** con opciones flexibles
+- **Logs detallados** y manejo robusto de errores
 
 ---
 
+## 🚀 Inicio Rápido
 
-## Mejoras recientes
-
-- Modelos de IA (CLIP, YOLO) se cargan solo una vez para eficiencia.
-- Detección de personajes mejorada con umbral de confianza y nombres legibles.
-- Embeddings y búsquedas optimizadas con FAISS, soporte para batch processing.
-- Manejo de errores y logs en todas las funciones de IA.
-- Tablas SQL generadas en mayúsculas y ordenadas alfabéticamente.
-- Todas las rutas se gestionan desde la raíz del proyecto para evitar errores de ubicación.
-- Código más robusto y fácil de depurar.
-
----
-
-
-## Comandos principales
-
-El script se puede ejecutar directamente o instalando el paquete (ver más abajo). Todas las rutas deben ser absolutas o relativas a:
-
-`/home/jecla2517/Escritorio/programacion/ordenar imagenes`
-
-Por ejemplo:
-
-- Excel: `/home/jecla2517/Escritorio/programacion/ordenar imagenes/lista.xlsx`
-- Imágenes: `/home/jecla2517/Escritorio/programacion/ordenar imagenes/imagenes/`
-- Salida: `/home/jecla2517/Escritorio/programacion/ordenar imagenes/filtrada/`
-- Imágenes: `~/Escritorio/anime`
-- Salida: `~/Escritorio/filtrada`
-- Base de datos SQLite: `animes.db` dentro del directorio de salida
-
-```sh
-python "anime_organizer.py" \
-    --excel "~/Escritorio/lista de animes actualizacion.xlsx" \
-    --images "~/Escritorio/anime" \
-    --output "~/Escritorio/filtrada" \
-    --modo mover --verbose
+### Opción 1: Interfaz Gráfica (Recomendado)
+```bash
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+source anime_env/bin/activate
+python3 'app anime/gui.py'
 ```
 
-Ejecuta `python anime_organizer.py -h` o `anime-organizer -h` para ver todas las
-opciones, entre las que destacan:
-
-* `--modo` : `mover` (predeterminado) o `copiar` imágenes.
-* `--review` : revisión interactiva mediante ventanas con OCR.
-* `--text-review` : revisión en modo texto/terminal (para servidores o SSH).
-* `--columna` : nombre(s) de columna del Excel a usar; por defecto se usan
-  todas las columnas de texto.
-* `--filter-duplicates` : elimina de "por ver" los títulos que ya aparecen en
-  "vistos" cuando ambas columnas existen.
-* `--ignore-words` : añade palabras a ignorar durante la normalización, como
-  `PORTADA,LATINO` o cualquier otra.
-* `--create-shortcut` : crea un acceso directo en el escritorio para lanzar
-  rápidamente la aplicación.
-* `--verbose` : activa mensajes de depuración en la salida y en el log.
-
----
-
-## Qué hace internamente
-
-1. **Entrada**: la hoja se lee con `pandas.read_excel`; si la función de lectura
-   devuelve algo que no es un `DataFrame` real se convierte o aborta con error
-   (esto cubre casos raros como los que provocaron errores de `applymap`).
-2. Convierte todos los valores de texto a mayúsculas y ordena las filas.
-   (Se utiliza `df.map` para compatibilidad con pandas 3, que eliminó
-   `applymap`.)
-3. Cada columna se guarda en su propia tabla SQLite (nombre saneado con
-   `sanitize_name`).
-4. **Nombres válidos** se obtienen uniendo todas las columnas de tipo `object`
-   y `string` para ser compatibles con versiones futuras de pandas.
-5. Si se solicita, filtra duplicados entre "por ver" y "vistos".
-6. Sanea el directorio de salida existente: elimina carpetas no válidas y
-   renombra las que sólo difieren en mayúsculas o caracteres.
-7. Crea carpetas nuevas para cada nombre válido, usando `sanitize_name` para
-   generar nombres seguros.
-8. Recorre el directorio de imágenes y mueve/copia cada archivo cuyo nombre
-   base (sin extensión) coincide con un nombre válido, renombrándolo a
-   `ANIME#N.ext`.
-9. Si quedan imágenes sin emparejar y `--review` está activado, inicia el
-   flujo de revisión interactiva que muestra cada imagen, el texto OCR detectado
-   y sugiere carpetas mediante coincidencias difusas e imágenes similares.
-
----
-
-## Instalación como paquete
-
-Al instalar con `pip` el proyecto se registra como paquete y añade el script
-`anime-organizer`:
-
-```sh
-python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip setuptools
-pip install .          # o pip install -e . para desarrollo editable
+### Opción 2: Línea de Comandos
+```bash
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+source anime_env/bin/activate
+python3 'app anime/anime_organizer.py' --excel 'lista de animes actualización.xlsx' --images 'anime/' --output 'filtrar/'
 ```
 
-A partir de entonces puedes ejecutar:
-
-```sh
-anime-organizer --excel ruta.xlsx --images ruta/imagenes --output salida
+### Opción 3: Script Automático
+```bash
+bash '/home/jecla2517/Escritorio/programacion/ordenar imagenes/ejecutar_organizador.sh'
 ```
 
 ---
 
-## Interfaz gráfica (GUI)
+## 📋 Requisitos del Sistema
 
-Si prefieres no usar la línea de comandos existe un wrapper muy sencillo basado
-en `tkinter`. Ejecuta `python gui.py` desde el repositorio o usa el comando
-`anime-organizer` con el flag `--gui` si lo habilitas.
+- **Python 3.8+** (probado con 3.12)
+- **Entorno virtual** recomendado (venv o conda)
+- **Espacio en disco**: ~600MB para modelos de IA (primera ejecución)
 
-La ventana proporciona campos para las rutas, modo, palabras a ignorar, y un
-botón para ejecutar. El campo "Ejemplo nombre" muestra cómo se normalizará el
-texto en tiempo real.
-
----
-
-## Crear ejecutable
-
-Para distribuir la aplicación en Windows puedes generar un solo `.exe` con
-PyInstaller:
-
-```sh
-pip install pyinstaller
-pyinstaller --onefile "anime_organizer.py" --name anime-organizer.exe
+### Dependencias Principales
+```
+pandas>=2.1,<4
+torch
+open_clip_torch
+faiss-cpu
+ultralytics
+pillow
+opencv-python
+pyside6
+requests
+sqlite3
 ```
 
-El resultado queda en `dist/`. Si lo deseas, añade `--icon=icono.ico` y
-`--noconfirm`.
-
-También hay un ejemplo de `run_anime.bat` junto al código para arrancar el
-programa en Windows sin parámetros.
-
----
-
-## Dependencias y versiones
-
-- `pandas>=2.1,<4` (la restricción evita incompatibilidades con pandas 3 o 4).
-- Opcionales: `pillow`, `pytesseract`, `imagehash`, `python-dateutil`, etc.
-
-El fichero `requirements.txt` contiene la misma pinning para facilitar la
-instalación con `pip install -r requirements.txt`.
+### Instalación Automática
+```bash
+cd '/home/jecla2517/Escritorio/programacion/ordenar imagenes'
+python3 'app anime/install_env.py'
+```
 
 ---
 
-## Pruebas
+## 🎯 Cómo Funciona
 
-Se incluye una suite de `pytest` con 13 pruebas que cubren lectura de Excel,
-creación de tablas SQL, normalización de nombres, limpieza de directorios,
-revisión interactiva (simulada) y compatibilidad con pandas 3. Inspecciona
-`tests/test_anime.py` para detalles.
+### 1. 📊 Preparación de Datos
+- **Lectura del Excel**: Carga la lista de animes desde hoja de cálculo
+- **Enriquecimiento con MAL API**: Obtiene metadatos adicionales (sinopsis, rating, etc.)
+- **Creación de Base de Datos**: Almacena todo en SQLite con estructura optimizada
+- **Limpieza Automática**: Elimina carpetas no válidas y devuelve imágenes a origen
 
-Ejecuta `pytest -q` para validar todo.
+### 2. 🧠 Análisis con IA Mejorado
+- **Carga de Modelos**: CLIP para reconocimiento semántico, YOLO para detección
+- **Procesamiento de Imágenes**: Análisis batch para máxima eficiencia
+- **Algoritmo de Matching Multi-Nivel**:
+  - **Learning**: Asignaciones aprendidas manualmente (100% confianza)
+  - **Name Parts**: Matching por palabras clave con normalización inteligente (70%+ confianza)
+  - **Exact Match**: Coincidencia exacta después de normalización (100% confianza)
+  - **Similarity**: Búsqueda semántica por embeddings FAISS (75%+ confianza)
+  - **IA Fallback**: CLIP como último recurso para casos difíciles (80%+ confianza)
+- **Normalización Inteligente**: Preserva información clave, menos agresiva
+- **Base de Datos Filtrada**: Solo usa títulos de la tabla **ANIMES_VISTOS**
+
+### 3. 📁 Organización Automática
+- **Limpieza Previa**: Elimina carpetas no válidas y devuelve imágenes al origen
+- **Creación de Carpetas**: Una por cada anime, nombradas en MAYÚSCULA
+- **Filtrado por Estado**: Solo crea carpetas de animes **VISTOS**
+- **Movimiento de Imágenes**: Traslada archivos a sus carpetas correspondientes
+- **Renombrado Estandarizado**: "NOMBRE_ANIME # 1.jpg", "# 2.jpg", etc.
+
+### 4. 🔄 Renombrado Posterior (Proceso Independiente)
+- **Herramienta separada**: `rename_tool.py` para renombrado independiente
+- **Ejecución autónoma**: No requiere el proceso de organización
+- **Reorganización**: Corrige nombres según base de datos actualizada
+- **Estandarización**: Asegura consistencia en toda la colección
 
 ---
 
-## Notas adicionales
+## 🎨 Interfaz Gráfica Detallada
 
-- El código aplica saneamientos de nombre para evitar caracteres no válidos en
-  nombres de carpeta y limita la longitud a 255 bytes.
-- Los registros se escriben en `anime_organizer.log` dentro del directorio de
-  salida; activa `--verbose` para más detalle.
-- Las funciones y la estructura se eligieron para facilitar futuras mejoras
-  (por ejemplo, añadir un motor de búsqueda o soporte para otros formatos).
+### ⚙️ Pestaña Configuración
+- **Rutas configurables**: Excel, imágenes de entrada, carpeta de salida
+- **Opciones avanzadas**: Modo IA prioritario, umbrales de confianza
+- **Botón principal**: "🚀 ¡INICIAR ORGANIZACIÓN!"
+- **Barra de progreso**: Seguimiento en tiempo real
+
+### 🔄 Pestaña Procesando
+- **Lista en tiempo real**: Cada operación se registra aquí
+- **Progreso visual**: Barra de progreso y estado actual
+- **Logs detallados**: Información completa del proceso
+
+### 📊 Pestaña Resultados
+- **Estadísticas por carpeta**: Número de imágenes organizadas
+- **Interfaz interactiva**: Click en carpeta muestra sus imágenes
+- **Vista detallada**: Nombres de archivos individuales
+
+### ⏳ Pestaña Pendientes
+- **Imágenes sin clasificar**: Aquellas que no pudieron organizarse
+- **Análisis detallado**: Razones del fallo y sugerencias
+- **Opciones de corrección**: Posibilidad de reclasificación manual
+
+### 🔄 Pestaña Renombrar
+- **Herramienta especializada**: Para reorganizar colecciones existentes
+- **Configuración dedicada**: Carpeta específica para renombrar
+- **Información completa**: Explicación detallada de la funcionalidad
+- **Progreso independiente**: Seguimiento específico del renombrado
 
 ---
 
-## Problemas comunes con el modelo AI
+## 🛠️ Uso Avanzado
 
-- La primera vez que uses la app, descargará el modelo open_clip (~600MB) desde Hugging Face. Esto puede tardar varios minutos según tu conexión.
-- Para acelerar la descarga, inicia sesión con tu cuenta de Hugging Face ejecutando:
-  ```bash
-  huggingface-cli login
+### Opciones de Línea de Comandos
+```bash
+python3 anime_organizer.py [opciones]
+
+Opciones principales:
+  --excel RUTA          Archivo Excel con lista de animes
+  --images RUTA         Carpeta con imágenes a organizar
+  --output RUTA         Carpeta donde crear la organización
+  --modo {mover,copiar} Modo de operación (por defecto: mover)
+  --ai-first            Modo experimental: IA como primer método (no recomendado)
+  --verbose             Salida detallada para depuración
+  --help               Muestra todas las opciones disponibles
+```
+
+### Base de Datos
+- **Ubicación**: `animes.db` en el directorio de salida
+- **Estructura**: Una tabla por columna del Excel
+- **Contenido**: Títulos en mayúscula + metadatos MAL
+- **Campos**: title, rating, episodes, season, year, genres, synopsis
+
+### Modelos de IA
+- **CLIP**: Reconocimiento semántico de imágenes
+- **YOLO**: Detección de personajes y elementos
+- **FAISS**: Búsqueda eficiente de similitudes
+- **Primera ejecución**: Descarga automática (~600MB)
+
+---
+
+## 🔧 Instalación y Configuración
+
+### Entorno Virtual
+```bash
+# Crear entorno
+python3 -m venv anime_env
+
+# Activar entorno
+source anime_env/bin/activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+```
+
+### Base de Datos Inicial
+```bash
+# Ejecutar script de creación
+bash db_create.sh
+```
+
+### Modelos de IA
+```bash
+# Login opcional para acelerar descargas
+huggingface-cli login
+
+# Los modelos se descargan automáticamente en la primera ejecución
+```
+
+---
+
+## 📊 Estructura del Proyecto
+
+```
+app anime/
+├── ai_models.py          # Modelos de IA (CLIP, YOLO)
+├── anime_organizer.py    # Lógica principal de organización
+├── character_detector.py # Detección de personajes
+├── config.py            # Configuraciones del sistema
+├── filter_utils.py      # Utilidades de filtrado
+├── gui.py               # Interfaz gráfica PySide6
+├── gui_app.py           # Versión alternativa de GUI
+├── mal_api.py           # Integración con MyAnimeList API
+├── organizer_core.py    # Núcleo del organizador
+├── rename_tool.py       # Herramienta independiente de renombrado
+├── pyproject.toml       # Configuración del proyecto
+├── README.md            # Esta documentación
+├── requirements.txt     # Dependencias Python
+├── setup_and_run.py     # Script de instalación
+├── vector_index.py      # Índice vectorial FAISS
+├── animes_database.py   # Creación de base de datos
+└── __pycache__/         # Archivos compilados
+```
+
+---
+
+## 🐛 Solución de Problemas
+
+### Problemas Comunes
+- **Modelo no descarga**: Verificar conexión a internet y espacio en disco
+- **Error de rutas**: Usar rutas absolutas o relativas al directorio raíz
+- **Memoria insuficiente**: Reducir batch size en configuraciones grandes
+- **Base de datos corrupta**: Eliminar `animes.db` y recrear
+
+### Logs y Depuración
+- **Archivo de log**: `anime_organizer.log` en directorio de salida
+- **Modo verbose**: Añadir `--verbose` para más información
+- **Debug en GUI**: Ver pestaña "Procesando" para detalles en tiempo real
+
+### Rendimiento
+- **Primera ejecución**: Más lenta debido a descarga de modelos
+- **Optimización**: Los modelos se cargan una sola vez por sesión
+- **Batch processing**: Procesamiento en lotes para mejor rendimiento
+
+---
+
+## 🤝 Contribución
+
+### Desarrollo
+1. **Fork** el repositorio
+2. **Crear rama** para nueva funcionalidad
+3. **Commits** descriptivos siguiendo convenciones
+4. **Pull Request** con descripción detallada
+
+### Pruebas
+```bash
+# Ejecutar suite de pruebas
+pytest tests/
+
+# Pruebas específicas
+pytest tests/test_anime.py::test_excel_reading
+```
+
+### Estándares de Código
+- **PEP 8** para estilo Python
+- **Docstrings** completas en funciones
+- **Comentarios** explicativos en lógica compleja
+- **Manejo de errores** robusto
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para detalles.
+
+---
+
+## 🙏 Agradecimientos
+
+- **OpenAI CLIP** - Por el modelo de reconocimiento de imágenes
+- **Ultralytics YOLO** - Por la detección de objetos
+- **Meta FAISS** - Por la búsqueda vectorial eficiente
+- **MyAnimeList** - Por la API de metadatos de anime
+- **PySide6/Qt** - Por el framework de interfaz gráfica
+
+---
+
+## 📞 Soporte
+
+Para soporte técnico o reportar bugs:
+1. Revisar la sección de solución de problemas
+2. Verificar logs en `anime_organizer.log`
+3. Abrir issue en el repositorio con:
+   - Descripción detallada del problema
+   - Pasos para reproducir
+   - Logs relevantes
+   - Información del sistema
+
+---
+
+**¡Disfruta organizando tu colección de anime con IA! 🎌✨**
   ```
   O deja que la app lo solicite automáticamente la primera vez.
 - Si tienes problemas de red o la descarga es muy lenta, puedes descargar manualmente el modelo desde [Hugging Face](https://huggingface.co/openai/clip-vit-base-patch32) y colocarlo en `~/.cache/open_clip`.
