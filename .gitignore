@@ -1,0 +1,64 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Logs
+*.log
+local_settings.py
+
+# Django
+db.sqlite3
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+anime_env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+animes.db
+*.xlsx
+*.xls
+*.csv
+organized/
+logs/
+models/
+cache/
+
+# Temporary
+*.bak
+*.tmp
